@@ -6,6 +6,7 @@ public class Library {
 
 	String logoPath;
 	String gradientPath;
+	String framePath;
 	String font;
 	Color main_background_color;
 
@@ -41,10 +42,19 @@ public class Library {
 		this.main_background_color = main_background_color;
 	}
 
+	public String getFramePath() {
+		return framePath;
+	}
+
+	public void setFramePath(String framePath) {
+		this.framePath = framePath;
+	}
+
 	@Override
 	public String toString() {
-		return "Library [logoPath=" + logoPath + ", gradientPath=" + gradientPath + ", font=" + font
-				+ ", main_background_color=" + main_background_color + "]";
+		return "Library [logoPath=" + logoPath + ", gradientPath=" + gradientPath + ", framePath=" + framePath
+				+ ", font=" + font + ", main_background_color=" + main_background_color + "]";
 	}
+
 
 }

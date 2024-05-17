@@ -28,25 +28,30 @@ import org.cobra.ui.CustomErrorMessage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 
 public class IdCardDesign {
-    public void whiteBackgroundDesign(Library lib, String path, EmpDetails emp,String validDate){
+    public Table whiteBackgroundDesign(Library lib, String path, EmpDetails emp,String validDate){
        
 
         
-        
-        try (PdfWriter writer = new PdfWriter(path)) {
         	
-
+         try {
             // add Logo
             ImageData data = ImageDataFactory.create(lib.getLogoPath());
             Image logo = new Image(data);
             logo.setWidth(50);
             logo.setHeight(50);
-            CustomErrorMessage.showMessage(String.valueOf(logo.getImageWidth()));
+            
+            //emp images
+            String empImage = emp.getPhotoUrl()==null?lib.getFramePath():emp.getPhotoUrl();
+            ImageData profile = ImageDataFactory.create(empImage);
+            Image pic = new Image(profile);
+            logo.setWidth(50);
+            logo.setHeight(50);
           
 
             // add gradient
@@ -104,13 +109,13 @@ public class IdCardDesign {
 
 
 
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.addNewPage();
-            pdfDoc.setDefaultPageSize(PageSize.A4.rotate());
-            
-            
-            Document doc = new Document(pdfDoc);
-            doc.setMargins(10, 10, 10, 10);
+//            PdfDocument pdfDoc = new PdfDocument(writer);
+//            pdfDoc.addNewPage();
+//            pdfDoc.setDefaultPageSize(PageSize.A4.rotate());
+//            
+//            
+//            Document doc = new Document(pdfDoc);
+//            doc.setMargins(10, 10, 10, 10);
             
 
 
@@ -127,7 +132,7 @@ public class IdCardDesign {
             companyBodyTable.addCell(new Cell().add(employeeTable).setBorder(Border.NO_BORDER));
 
 
-            companyBodyTable.addCell(new Cell().add(logo.scaleToFit(60,80)).setBorder(Border.NO_BORDER));
+            companyBodyTable.addCell(new Cell().add(pic.scaleToFit(60,80)).setBorder(Border.NO_BORDER));
 
 
             Table companyFooterTable = new Table(new float[]{100,100,100});
@@ -152,23 +157,29 @@ public class IdCardDesign {
             main.addCell(new Cell().add(companyFooterTable).setBorderTop(Border.NO_BORDER));
             main.setBackgroundColor(lib.getMain_background_color());
 
-            doc.add(main);
+//            doc.add(main);
 //            doc.add(TestingTable);
-            doc.close();
+//            doc.close();
+          
             System.out.println("pdf created");
-
+            return main;
 
         } catch (IOException e) {
-        	  CustomErrorMessage.showMessage(e.getMessage());
-            throw new RuntimeException(e);
-  }
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//    catch (IOException e) {
+//        	  CustomErrorMessage.showMessage(e.getMessage());
+//            throw new RuntimeException(e);
+//  }
 //        catch (URISyntaxException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-    	catch (Exception e) {
-            CustomErrorMessage.showMessage(e.getMessage());
-		}
+//    	catch (Exception e) {
+//            CustomErrorMessage.showMessage(e.getMessage());
+//		}
+         return null;
 
     }
 

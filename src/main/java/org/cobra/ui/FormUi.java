@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.cobra.models.EmpDetails;
 import org.cobra.models.Library;
 import org.cobra.pdfgen.IdCardDesign;
+import org.cobra.pdfgen.IdCardDocument;
 
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -30,7 +31,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -56,6 +61,8 @@ public class FormUi {
 	private DefaultTableModel empModel;
 	private Library lib;
 	private String validDateStr;
+	
+	private List<EmpDetails> listEmployee;
 	
 	
 	
@@ -85,6 +92,7 @@ public class FormUi {
 	 * Create the application.
 	 */
 	public FormUi() {
+		listEmployee = new LinkedList<EmpDetails>();
 		initialize();
 	}
 
@@ -238,6 +246,7 @@ public class FormUi {
 			        emp.setAddress(emp_add_txt.getText());
 			      			       
 			        empModel.addRow(emp.getValues());
+			        listEmployee.add(emp);
 				
 			}
 			private String getDate(Date date) {
@@ -317,6 +326,7 @@ public class FormUi {
 					 lib = new Library();
 					 lib.setLogoPath(logoPath);
 					 lib.setGradientPath(gradientPath);
+					 lib.setFramePath(f.getAbsolutePath()+"\\images\\frame.png");
 					 lib.setFont(f.getAbsolutePath()+"\\fonts\\Roboto\\Roboto-Regular.ttf");
 					 
 					
@@ -357,15 +367,7 @@ public class FormUi {
 				
 				
 				
-				  EmpDetails  emp = new EmpDetails();
-			        emp.setName(emp_name_txt.getText());
-			        emp.setDob(dbo_chooser.getDateFormatString());
-			        emp.setBloodGroup(blood_group_txt.getText());
-			        emp.setDesignation(emp_designation_txt.getText());
-			        emp.setRegNo(emp_reg_txt.getText());
-			        emp.setFatherName(emp_father_name_txt.getText());
-			        emp.setJoiningDate(joining_date_chooser_1.getDateFormatString());
-			        emp.setAddress(emp_add_txt.getText());
+				 
 			        
 			        JFileChooser file_chooser = new JFileChooser();
 			        file_chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -376,7 +378,9 @@ public class FormUi {
 						 System.out.println(imgPath);
 						 if(lib!=null) {
 							 lib.setMain_background_color(new DeviceRgb(255,255,255));
-							 new IdCardDesign().whiteBackgroundDesign(lib,path,emp,validDateStr);
+							
+							
+							 new IdCardDocument().getDocument(lib,path,listEmployee,validDateStr);
 						 }
 						 else CustomErrorMessage.showMessage("choose Library");
 			        }
