@@ -7,10 +7,11 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.cobra.models.CompanyDetails;
 import org.cobra.models.EmpDetails;
 import org.cobra.models.Library;
-import org.cobra.pdfgen.IdCardDesign;
 import org.cobra.pdfgen.IdCardDocument;
+import org.cobra.services.CompanyDetailsService;
 
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -20,19 +21,13 @@ import java.awt.Image;
 
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.toedter.calendar.JDateChooser;
-import javax.swing.SwingConstants;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,10 +35,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 
 public class FormUi {
@@ -63,6 +54,7 @@ public class FormUi {
 	private String validDateStr;
 	
 	private List<EmpDetails> listEmployee;
+	private CompanyDetails companyDetails;
 	
 	
 	
@@ -329,6 +321,9 @@ public class FormUi {
 					 lib.setFramePath(f.getAbsolutePath()+"\\images\\frame.png");
 					 lib.setFont(f.getAbsolutePath()+"\\fonts\\Roboto\\Roboto-Regular.ttf");
 					 
+					 //add company details
+					 companyDetails= CompanyDetailsService.getCompanyDetails(new File(f.getAbsoluteFile()+"\\company_data.json"));
+					 
 					
 					 
 				 }
@@ -353,14 +348,14 @@ public class FormUi {
 		lblNewLabel.setBounds(319, 41, 56, 13);
 		document.add(lblNewLabel);
 		
-		JButton validDatebtn = new JButton("updateValidDate");
+		JButton validDatebtn = new JButton("update Valid Date");
 		validDatebtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(validDate.getDate()!=null)
 					validDateStr = new SimpleDateFormat("dd-MM-yyyy").format(validDate.getDate());
 			}
 		});
-		validDatebtn.setBounds(376, 73, 85, 21);
+		validDatebtn.setBounds(376, 73, 152, 21);
 		document.add(validDatebtn);
 		generateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -380,7 +375,7 @@ public class FormUi {
 							 lib.setMain_background_color(new DeviceRgb(255,255,255));
 							
 							
-							 new IdCardDocument().getDocument(lib,path,listEmployee,validDateStr);
+							 new IdCardDocument().getDocument(lib,path,listEmployee,validDateStr,companyDetails);
 						 }
 						 else CustomErrorMessage.showMessage("choose Library");
 			        }
